@@ -5,6 +5,7 @@ import (
 	"bytes"
 	"io"
 	"net/http"
+	"os"
 	"strconv"
 	"strings"
 )
@@ -74,7 +75,14 @@ func handleUpload(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 	http.HandleFunc("/upload", handleUpload)
-	err := http.ListenAndServe(":8080", nil)
+
+	port, found := os.LookupEnv("PORT")
+
+	if !found {
+		port = "8080"
+	}
+
+	err := http.ListenAndServe(":"+port, nil)
 
 	if err != nil {
 		panic(err)
